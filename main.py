@@ -102,13 +102,10 @@ def index():
 
 @app.route('/')
 def hello_world():
-    conn = psycopg2.connect(host="localhost",database="sales_demo",user="postgres", password="re")
-    curr = conn.cursor()
-    curr.execute("""
+    rows = db.engine.execute("""
     select (sum(i.buying_price*s.quantity)) as subtotal, extract(Month from s.created_at) from public.inventories i join 
     public.sales s on i.id=s.inv_id group by extract (month from s.created_at) order by extract (month from s.created_at)
     """)
-    rows = curr.fetchall()
     months = []
     total_sales = []
 
@@ -116,12 +113,10 @@ def hello_world():
         months.append(each[1])
         total_sales.append(each[0])
 
-    curr1 = conn.cursor()
-    curr1.execute("""
+    records = db.engine.execute("""
     select to_char( s.created_at,'Month'),sum(s.quantity*(i.selling_price)) from sales s join inventories i on s.inv_id=i.id where Extract(year from s.created_at)='2019'
      group by to_char( s.created_at,'Month')
     """)
-    records = curr1.fetchall()
     pie_chart = pygal.Pie()
     pie_chart.title = 'Sales Month wise'
     for each in records:
