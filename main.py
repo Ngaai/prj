@@ -133,7 +133,7 @@ def hello_world():
     graph.add('Total Sales', total_sales)
     graph_data = graph.render_data_uri()
     pie_data = pie_chart.render_data_uri()
-    return render_template('hello_world.html', graph_data=graph_data, pie_data=pie_data)
+    return render_template('index.html', graph_data=graph_data, pie_data=pie_data)
 
 
 if __name__ == '__main__':
