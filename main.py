@@ -6,7 +6,7 @@ from config.config import Development, Production
 from datetime import datetime
 
 app = Flask(__name__)
-app.config.from_object(Development)
+app.config.from_object(Production)
 db = SQLAlchemy(app)
 from models.inventories import Inventories
 from models.sales import  Sales
