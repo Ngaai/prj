@@ -3,14 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Sales Management Inventory</title>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script>
+    $(document).ready(function () {
+        $('#mytable').DataTable();
+    });
+    var modal = document.getElementsByClassName('.modal1');
+
+    var span = document.getElementsByClassName(".close")[0];
+     span.onclick = function() {
+     modal.style.display = "none";}
+     $(document).click(function (e) {
+    if ($(e.target).is('.modal1')) {
+        $('.modal1').fadeOut(500);
+    }
+
+});
+
+$(".container").click(function () {
+    $(".modal1").fadeOut(500);
+
+
+});
+$(".close").click(function () {
+    $(".modal1").fadeOut(500);
+});
+$(".close-circle").click(function () {
+    $(".modal").fadeOut(500);
+});
+     window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+
+}
+</script>
     <style>
         body {
             background-color: lightgreen;
         }
+
 
         h1 {
             color: white;
@@ -21,24 +57,66 @@
             font-family: verdana;
             font-size: 20px;
         }
+        .modal1 {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.8);
+}
+
+#modal-content {
+    background-color: #ccffff;;
+    margin-bottom: 70px;
+    margin-left: 100px;
+    padding: 5px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 10px;
+}
+
+.close {
+    color: #000000;
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #ff0000;
+    text-decoration: none;
+    cursor: pointer;
+}
     </style>
 
 
 </head>
 
 <body>
+<nav class="navbar navbar-expand-lg  navbar-dark bg-primary">
+            <a class="navbar-brand" href="{{ url_for('hello_world') }}">Home</a>
+            <a class="navbar-brand" href="{{ url_for('add_inventories') }}">Inventories</a>
+            <a class="navbar-brand" href="{{ url_for('about') }}">About</a>
+            </nav>
+
 <div class="container">
 
     <div class="row">
         <div class="col-4"></div>
         <div class="col-4">
-
+<br><br>
 
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 Add Inventory
-
-            </button>
+            </button><br><br>
 
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -72,13 +150,15 @@
 
                                 <div class="form-group">
                                     <label for="exampleFormControlInput1">bp</label>
-                                    <input name="buying_price" type="float" class="form-control" id="exampleFormControlInput1"
+                                    <input name="buying_price" type="float" class="form-control"
+                                           id="exampleFormControlInput1"
                                            placeholder="Enter Value">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="exampleFormControlInput1">sp</label>
-                                    <input name="selling_price" type="float" class="form-control" id="exampleFormControlInput1"
+                                    <input name="selling_price" type="float" class="form-control"
+                                           id="exampleFormControlInput1"
                                            placeholder="Enter Value">
                                 </div>
 
@@ -119,9 +199,10 @@
                     <th scope="col">Buying Price</th>
                     <th scope="col">Selling Price</th>
                     <th scope="col">Stock</th>
-                    <th scope="col">Edit</th>
+                    <th scope="col">Sell</th>
                     <th scope="col">View Sale</th>
-                    <th scope="col">Delete</th>
+                    <th scope="col">Edit</th>
+                     <th scope="col">Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -136,66 +217,140 @@
                         <td>{{ each.selling_price }}</td>
                         <td>{{ each.stock }}</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#saleModal{{ each.id }}">Make sale</button>
-                            <div class="modal fade" id="saleModal{{  each.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#saleModal{{ each.id }}">Sell
+                            </button>
+                            <div class="modal fade" id="saleModal{{ each.id }}" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Sell</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{ url_for('make_sale' ,id1 = each.id) }}" method="POST">
+                                                <input type="hidden" name="inv_id" value="{{ each.id }}"/>
+                                                <div class="form-group">
+                                                    <label for="exampleFormControlInput1">Quantity</label>
+                                                    <input name="quantity" type="string" class="form-control"
+                                                           id="exampleFormControlInput1"
+                                                           placeholder="Quantity">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Sell</button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewSModel{{ each.id }}">View Sales</button>
+                                <div class="modal1 fade" id="viewSModel{{ each.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-content" id="modal-content">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+<table class="myTable" id="myTable">
+  <tr>
+    <th>Item</th>
+    <th>Quantity</th>
+    <th>Date Of Sale</th>
+  </tr>
+        {% for i in each.sales %}
+  <tr>
+    <td>{{ each.name }}</td>
+    <td>{{ i.quantity }}</td>
+    <td>{{ i.created_at }}</td>
+  </tr>{% endfor %}
+</table>
+ </div>
+                                </div></td>
+                        <td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editIModal{{ each.id }}">Edit</button>
+                            <div class="modal fade" id="editIModal{{ each.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Make Sales</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Inventory</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ url_for('make_sale' ,id1 = each.id)}}" method="POST">
-                                <input type="hidden" name="inv_id" value="{{ each.id }}"/>
+
+
+                            <form action="/update_sale/{{ each.id }}" method="POST">
                                 <div class="form-group">
-                                    <label for="exampleFormControlInput1">Quantity</label>
-                                    <input name="quantity" type="string" class="form-control"
-                                           id="exampleFormControlInput1"
-                                           placeholder="Quantity">
+                                    <label for="exampleFormControlInput1">Name</label>
+                                    <input name="name" type="string" class="form-control" id="exampleFormControlInput1" value="{{ each.name }}"
+                                           placeholder="type name">
                                 </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">type</label>
+                                    <select name="type" class="form-control" id="exampleFormControlSelect1">
+                                        <option selected>{{ each.type }}</option>
+                                        <option>Product</option>
+                                        <option>Service</option>
+
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">bp</label>
+                                    <input name="buying_price" type="float" class="form-control" value="{{ each.buying_price }}"
+                                           id="exampleFormControlInput1"
+                                           placeholder="Enter Value">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">sp</label>
+                                    <input name="selling_price" type="float" class="form-control" value="{{ each.selling_price }}"
+                                           id="exampleFormControlInput1"
+                                           placeholder="Enter Value">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Stock</label>
+                                    <input name="stock" type="integer" class="form-control" value="{{ each.stock }}"
+                                           id="exampleFormControlInput1" placeholder="Enter Value">
+                                </div>
+
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Sale</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
                                 </div>
 
                             </form>
-                        </div>
-                    </div>
-                </div></div>
-                        </td>
-                        <td> <a href="/view_sales/{{ each.id }}"><button type="button" class="btn btn-outline-secondary" data-dismiss="modal">View Sales</button></a>
 
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
                         </td>
-                        <td> <a href="/delete/{{ each.id }}"><button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Delete</button></a> </td>
-                        <td> <a href="/update_sale/{{ each.id }}"><button type="button" class="btn btn-outline-secondary" data-dismiss="modal">update</button></a> </td>
-                <td><button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#editModal">Edit</button></td>
-                        <td></td>
+                    <td>
+                        <a href="{{url_for('delete_item', id=each.id) }}"><button class="btn btn-primary" >Delete</button></a>
+                    </td>
                     </tr>
                 {% endfor %}
-
 
 
                 </tbody>
             </table>
 
 
-
-
-
-
-
-        </div>
         </div>
     </div>
+</div>
 
 
 </div>
-<script>
-    $(document).ready( function () {
-    $('#mytable').DataTable();
-} );
-</script>
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

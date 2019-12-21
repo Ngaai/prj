@@ -1,15 +1,15 @@
 import psycopg2
-import pygal
+import pygal, sys
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from config.config import Development, Production
 from datetime import datetime
 
 app = Flask(__name__)
-app.config.from_object(Production)
+app.config.from_object(Development)
 db = SQLAlchemy(app)
 from models.inventories import Inventories
-from models.sales import  Sales
+from models.sales import Sales
 
 
 @app.before_first_request
@@ -17,19 +17,25 @@ def create_tables():
     db.create_all()
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
 @app.route('/delete/<int:id>')
 def delete_item(id):
     record = Inventories.fetch_a_record(id)
-    record.delete_record()
-    return redirect(url_for('index'))
+    try:
+        record.delete_record()
+    except:
+        return 'Could not delete item, confirm there are no sales'
+    return redirect(url_for('add_inventories'))
 
 
-@app.route('/view_sales/<int:id1>')
-def view_sales(id1):
-    record = Inventories.fetch_a_record(id1)
-    return render_template('sales.html', record=record)
-
-
+#@app.route('/view_sales/<int:id1>')
+#def view_sales(id1):
+#   record = Inventories.fetch_a_record(id1)
+#   return render_template('about.html', record=record)
 @app.route('/salepro/<int:id>', methods=['POST', 'GET'])
 def makeSales(id):
     record = Inventories.fetch_one_record(id)
