@@ -3,11 +3,13 @@ import pygal
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from config.config import Development, Production
+from datetime import datetime
 
 app = Flask(__name__)
-app.config.from_object(Production)
+app.config.from_object(Development)
 db = SQLAlchemy(app)
 from models.inventories import Inventories
+from models.sales import  Sales
 
 
 @app.before_first_request
@@ -36,7 +38,6 @@ def makeSales(id):
 
             quantity = request.form['quantity']
             newStock = record.stock - int(quantity)
-
             record.stock = newStock
             db.session.commit()
             flash('You successfully made a sale', 'success')
@@ -51,10 +52,13 @@ def make_sale(id1):
     if record:
         if request.method == 'POST':
             quantity = request.form['quantity']
+            inv_id =request.form['inv_id']
 
             if int(quantity) < record.stock:
                 new_stock = record.stock - int(quantity)
                 record.stock = new_stock
+                sale = Sales(inv_id=inv_id, quantity=quantity, created_at=datetime.now())
+                sale.sell()
                 db.session.commit()
                 flash('Successful Sale')
             else:

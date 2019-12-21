@@ -148,7 +148,7 @@
                         </div>
                         <div class="modal-body">
                             <form action="{{ url_for('make_sale' ,id1 = each.id)}}" method="POST">
-                                {{ each.id }}
+                                <input type="hidden" name="inv_id" value="{{ each.id }}"/>
                                 <div class="form-group">
                                     <label for="exampleFormControlInput1">Quantity</label>
                                     <input name="quantity" type="string" class="form-control"
