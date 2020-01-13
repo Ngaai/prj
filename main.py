@@ -6,7 +6,7 @@ from config.config import Development, Production
 from datetime import datetime
 
 app = Flask(__name__)
-app.config.from_object(Production)
+app.config.from_object(Development)
 db = SQLAlchemy(app)
 from models.inventories import Inventories
 from models.sales import Sales
@@ -16,6 +16,16 @@ from models.sales import Sales
 def create_tables():
     db.create_all()
 
+rows = db.engine.execute("""
+    select (sum(i.buying_price*s.quantity)) as subtotal, extract(Month from s.created_at) from public.inventories i join 
+    public.sales s on i.id=s.inv_id where Extract(year from s.created_at)='2019' group by extract (month from s.created_at) order by extract (month from s.created_at)
+    """)
+months = []
+total_sales = []
+
+for each in rows:
+    months.append(each[1])
+    total_sales.append(each[0])
 
 @app.route('/about')
 def about():
@@ -105,24 +115,40 @@ def add_inventories():
 
 @app.route('/add_inventories.html')
 def index():
-
     records = Inventories.query.all()
-
     return render_template('add_inventories.html', records=records)
 
-@app.route('/')
-def hello_world():
+
+@app.route('/predictor',methods=['POST','GET'])
+def predictor():
+    if request.method == 'GET':
+        select_year = '2019'
+    else:
+         select_year = request.form['selected_year']
     rows = db.engine.execute("""
-    select (sum(i.buying_price*s.quantity)) as subtotal, extract(Month from s.created_at) from public.inventories i join 
-    public.sales s on i.id=s.inv_id group by extract (month from s.created_at) order by extract (month from s.created_at)
-    """)
+        select (sum(i.buying_price*s.quantity)) as subtotal, 
+        extract(Month from s.created_at)
+         from public.inventories i join 
+        public.sales s on i.id=s.inv_id where 
+        Extract(year from s.created_at)=""" + select_year + """
+         group by extract (month from s.created_at) 
+         order by extract (month from s.created_at)""")
     months = []
     total_sales = []
 
     for each in rows:
         months.append(each[1])
         total_sales.append(each[0])
+    graph = pygal.Line()
+    graph.title = 'Sales over time'
+    graph.x_labels = months
+    graph.add('Total Sales', total_sales)
+    graph_data = graph.render_data_uri()
+    return render_template('predictor.html', graph_data=graph_data)
 
+
+@app.route('/')
+def hello_world():
     records = db.engine.execute("""
     select to_char( s.created_at,'Month'),sum(s.quantity*(i.selling_price)) from sales s join inventories i on s.inv_id=i.id where Extract(year from s.created_at)='2019'
      group by to_char( s.created_at,'Month')

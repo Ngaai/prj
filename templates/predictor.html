@@ -12,14 +12,24 @@
             <a class="navbar-brand" href="{{ url_for('add_inventories') }}">Inventories</a>
             <a class="navbar-brand" href="{{ url_for('about') }}">About</a>
             </nav>
-
-
-<div class="container" align="left">
-
+    <div class="row" style="margin-left:20px;padding-top: 40px">
+<div class="m4 w-25" style="margin-left:20px; padding-left: 20px" >
+      <form method="post" action="/predictor">
+          <label>Select Year</label>
+        <select name="selected_year" class="form-control">
+            <option  value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+        </select>
+          <br>
+        <input type="submit" />
+    </form>
+</div>
+<div class="container w-50">
 			<embed type="image/svg+xml" src={{graph_data|safe}} style='max-width:1000px'/>
-	  </div>
-<div class="container" align="left">
-			<embed type="image/svg+xml" src={{pie_data|safe}} style='max-width:1000px'/>
-	  </div>
+</div></div>
+
 </body>
 </html>
