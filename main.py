@@ -73,7 +73,7 @@ def make_sale(id1):
             if int(quantity) < record.stock:
                 new_stock = record.stock - int(quantity)
                 record.stock = new_stock
-                sale = Sales(inv_id=inv_id, quantity=quantity, created_at=now())
+                sale = Sales(inv_id=inv_id, quantity=quantity, created_at=datetime.now())
                 sale.sell()
                 db.session.commit()
                 flash('Successful Sale')
