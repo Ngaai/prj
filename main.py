@@ -73,7 +73,8 @@ def make_sale(id1):
             if int(quantity) < record.stock:
                 new_stock = record.stock - int(quantity)
                 record.stock = new_stock
-                db.engine.execute("insert into sales values ( (select  max(id)+1 from sales),"+str(inv_id)+","+str(quantity)+")")
+                sale = Sales(inv_id=inv_id, quantity=quantity, created_at=now())
+                sale.sell()
                 db.session.commit()
                 flash('Successful Sale')
             else:
