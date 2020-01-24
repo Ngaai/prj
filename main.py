@@ -73,14 +73,13 @@ def make_sale(id1):
             if int(quantity) < record.stock:
                 new_stock = record.stock - int(quantity)
                 record.stock = new_stock
-                sale = Sales(inv_id=inv_id, quantity=quantity, created_at=datetime.now())
-                sale.sell()
+                db.engine.execute("insert into sales values ( (select  max(id)+1 from sales),"+str(inv_id)+","+str(quantity)+")")
                 db.session.commit()
                 flash('Successful Sale')
             else:
                 flash('stock not available')
 
-    return redirect(url_for('hello_world'))
+    return redirect(url_for('add_inventories'))
 
 
 @app.route('/update_sale/<int:id>', methods=['POST', 'GET'])
