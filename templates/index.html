@@ -1,18 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
+{% include "header.html" %}
 <body>
-<nav class="navbar navbar-expand-lg  navbar-dark bg-primary">
-            <a class="navbar-brand" href="{{ url_for('hello_world') }}">Home</a>
-            <a class="navbar-brand" href="{{ url_for('add_inventories') }}">Inventories</a>
-            <a class="navbar-brand" href="{{ url_for('about') }}">About</a>
-            </nav>
-
+{% include "navbar.html" %}
 
 <div class="container" align="left">
 
@@ -21,5 +9,6 @@
 <div class="container" align="left">
 			<embed type="image/svg+xml" src={{pie_data|safe}} style='max-width:1000px'/>
 	  </div>
+{% include "footer.html" %}
 </body>
 </html>

@@ -1,18 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
+{% include "header.html" %}
 <body>
- <nav class="navbar navbar-expand-lg  navbar-dark bg-primary">
-            <a class="navbar-brand" href="{{ url_for('hello_world') }}">Home</a>
-            <a class="navbar-brand" href="{{ url_for('add_inventories') }}">Inventories</a>
-            <a class="navbar-brand" href="{{ url_for('about') }}">About</a>
-            </nav>
-<h4>Inventories/ Sales</h4>
-<h4>for more info contact @liz</h4>
+<div class="parallax" id="parallax-cta" style="background-image:url(https://www.solodev.com/assets/hero/hero.jpg);height:95%">
+{% include "navbar.html" %}
+<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
+<div class="ct-pageWrapper" id="ct-js-wrapper">
+                <section class="company-heading intro-type" id="parallax-one">
+                    <div class="container">
+                        <div class="row product-title-info">
+                            <div class="col-md-12">
+                                <h1>
+                                    About Us
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                        &nbsp;
+                </section>
+
+   </div>
+</main>
+</div>
+{% include "footer.html" %}
 </body>
 </html>

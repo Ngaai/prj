@@ -1,0 +1,168 @@
+{% include "header.html" %}
+<body>
+{% include "navbar.html" %}
+<br/>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Post Feedback Here</button>
+<div class="modal fade" id="exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+    <div class="modal-header">
+        <h3>Please rate us</h3><br/>
+        </div>
+            <div class="modal-body">
+        <form role="form" method="post" id="reused_form" action="/add_todo">
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                <label>How do you rate your overall experience?</label>
+                <p>
+                    <label class="radio-inline">
+                    <input type="radio" name="title" id="radio_experience" value="bad" >
+                    Bad
+                    </label>
+
+                    <label class="radio-inline">
+                    <input type="radio" name="title" id="radio_experience" value="average" >
+                    Average
+                    </label>
+
+                    <label class="radio-inline">
+                    <input type="radio" name="title" id="radio_experience" value="good" >
+                    Good
+                    </label>
+                </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="comments">
+                        Comments:</label>
+                    <textarea class="form-control" type="textarea" name="comment" id="comments" placeholder="Your Comments" maxlength="6000" rows="7"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label for="name">
+                        Your Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label for="email">
+                        Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+            </div>
+
+                        <div class="row">
+                <div class="col-sm-12 form-group">
+                    <button type="submit" class="btn btn-lg btn-primary btn-block" >Post </button>
+                </div>
+            </div>
+
+        </form>
+        <div id="success_message" style="width:100%; height:100%; display:none; ">
+            <h3>Posted your feedback successfully!</h3>
+        </div>
+        <div id="error_message"
+                style="width:100%; height:100%; display:none; ">
+                    <h3>Error</h3>
+                    Sorry there was an error sending your form.
+
+        </div>
+            </div>
+    </div>
+</div>
+</div>
+<br/>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+        <br/>
+            <table class="table" id="mytable">
+                <thead>
+                <tr>
+
+                    <th scope="col">Rating</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">View Reviews</th>
+                </tr>
+                </thead>
+            <tbody>
+            <tr>
+                {% for each in resp %}
+                        <td>{{ each['title'] }}</td>
+                        <td>{{ (each.description).split(':')[0] }}</td>
+                        <td>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editIModal{{ each['id'] }}">View $ Edit Feedback</button>
+   <div class="modal fade" id="editIModal{{ each['id'] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Please give us your feedback</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/edit_review/{{ each.id }}" method="POST">
+          <div class="row">
+                <div class="col-sm-12 form-group">
+                <label>How do you rate your overall experience?</label>
+                <p>
+                    <label class="radio-inline">
+                    <input type="radio" name="title" id="radio_experience" value="bad" >
+                    Bad
+                    </label>
+
+                    <label class="radio-inline">
+                    <input type="radio" name="title" id="radio_experience" value="average" >
+                    Average
+                    </label>
+
+                    <label class="radio-inline">
+                    <input type="radio" name="title" id="radio_experience" value="good" >
+                    Good
+                    </label>
+                </p>
+                </div>
+            </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Comment</label>
+                                    <input name="comment" type="textarea" class="form-control" value="{{ (each.description).split(':')[0] }}"
+                                           id="exampleFormControlInput1"
+                                           placeholder="Enter Value">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Name</label>
+                                    <input name="name" type="text" class="form-control" value="{{ (each.description).split(':')[1]}} "
+                                           id="exampleFormControlInput1"
+                                           placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Email</label>
+                                    <input name="email" type="email" class="form-control" value="{{ (each.description).split(':')[2] }}"
+                                           id="exampleFormControlInput1" placeholder=" ">
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary"><a href="{{ url_for('delete_todo',id=each.id) }}">Remove Feedback</a> </button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+                        </td>
+</tr>
+                {% endfor %}
+            </tbody>
+                </table>
+        </div></div></div>
+{% include "footer.html" %}
+</body>
+</html>

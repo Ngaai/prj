@@ -1,5 +1,5 @@
-import psycopg2
-import pygal, sys
+import requests
+import pygal, sys,json
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from config.config import Development, Production
@@ -140,7 +140,7 @@ def predictor():
         months.append(each[1])
         total_sales.append(each[0])
     graph = pygal.Line()
-    graph.title = 'Sales over time'
+    graph.title = 'Sales over time in year '+ select_year
     graph.x_labels = months
     graph.add('Total Sales', total_sales)
     graph_data = graph.render_data_uri()
@@ -165,6 +165,62 @@ def hello_world():
     graph_data = graph.render_data_uri()
     pie_data = pie_chart.render_data_uri()
     return render_template('index.html', graph_data=graph_data, pie_data=pie_data)
+
+# Todo functions
+
+
+@app.route('/feedback', methods=['GET'])
+def todo_all():
+    resp={}
+    try:
+        resp = requests.get('https://todomainclient.herokuapp.com/todos')
+    except ValueError:
+        return {"Message": "Error"}
+    print(resp.json()['todos'])
+    return render_template('todo.html', resp=resp.json()['todos'])
+
+
+@app.route('/review/<int:id>', methods=['GET'])
+def todo(id):
+    todo={}
+    try:
+       todo = requests.get('https://todomainclient.herokuapp.com/todos/'+ str(id)).json()
+    except ValueError:
+        return {'Message': 'Error occurred'}
+    return todo
+
+
+@app.route('/edit_review/<int:id>', methods=['POST', 'GET'])
+def edit_todo(id):
+    todo = requests.get('https://todomainclient.herokuapp.com/todos/' + str(id)).json()
+    if request.method == 'POST':
+        todo['title'] = request.form['title']
+        todo['description'] = request.form['comment']+":"+request.form['name']+":"+request.form['email']
+    resp = requests.put('https://todomainclient.herokuapp.com/todos/' + str(id), json=todo)
+    print(resp)
+    return redirect(url_for('todo_all'))
+
+
+@app.route('/delete_todo/<int:id>', methods=['POST', 'GET'])
+def delete_todo(id):
+    resp = requests.delete('https://todomainclient.herokuapp.com/todos/' + str(id))
+    if resp != 200:
+        pass
+    return redirect(url_for('todo_all'))
+
+
+@app.route('/add_todo', methods=['POST'])
+def add_todo():
+    if request.method=='POST':
+        title = request.form['title']
+        description = request.form['comment']+":"+request.form['name']+":"+request.form['email']
+    task = {"title": title, "description": description}
+    try:
+        requests.post("https://todomainclient.herokuapp.com/todos", json=task)
+
+    except ValueError:
+        return {'Message': 'Error occurred could not post the item'}
+    return redirect(url_for('/todo_all'))
 
 
 if __name__ == '__main__':
