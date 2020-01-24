@@ -113,7 +113,7 @@ def add_inventories():
     return redirect(url_for('index'))
 
 
-@app.route('/add_inventories.html')
+@app.route('/add_inventories')
 def index():
     records = Inventories.query.all()
     return render_template('add_inventories.html', records=records)

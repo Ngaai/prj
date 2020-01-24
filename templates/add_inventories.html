@@ -141,26 +141,31 @@
                         </td>
                         <td>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewSModel{{ each.id }}">View Sales</button>
-<div class="modal1 fade" id="viewSModel{{ each.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-content" id="modal-content">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
+<div class="modal fade" id="viewSModel{{ each.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+    <div class="modal-content" id="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">{{ each.name }}</h5>
+                            </button>
+                        </div>
+        <div class="modal-body">
 <table class="myTable" id="myTable">
   <tr>
-    <th>Item</th>
-    <th>Quantity</th>
-    <th>Date Of Sale</th>
+    <th>Number of items sold</th>
+    <th>Sold on</th>
   </tr>
         {% for i in each.sales %}
   <tr>
-    <td>{{ each.name }}</td>
     <td>{{ i.quantity }}</td>
     <td>{{ i.created_at }}</td>
   </tr>{% endfor %}
 </table>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  </div></div>
  </div>
-</div></td>
+   </div></div>
+                        </td>
 <td> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editIModal{{ each.id }}">Edit</button>
    <div class="modal fade" id="editIModal{{ each.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -172,8 +177,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-
-
                             <form action="/update_sale/{{ each.id }}" method="POST">
                                 <div class="form-group">
                                     <label for="exampleFormControlInput1">Name</label>
@@ -216,8 +219,6 @@
                                 </div>
 
                             </form>
-
-
                         </div>
 
                     </div>
